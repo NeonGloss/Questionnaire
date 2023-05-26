@@ -19,6 +19,19 @@ protocol MainViewControllerProtocol {
 final class MainViewController: UIViewController, MainViewControllerProtocol {
 
 	private let viewModel: MainViewModelProtocol
+
+	private var submitButton: UIButton {
+		let button = UIButton()
+		button.backgroundColor = .white
+		button.layer.borderColor = UIColor.black.cgColor
+		button.setImage(SemanticImages.bulletPointPassive, for: .normal)
+		button.setTitle(SemanticStrings.submit, for: .normal)
+		button.setTitleColor(.black, for: .normal)
+		button.layer.borderWidth = 1
+		button.layer.cornerRadius = 18
+		button.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
+		return button
+	}
 	private lazy var table = {
 		RKTableView(settings: RKTableViewSettings())
 	}()
@@ -69,5 +82,9 @@ final class MainViewController: UIViewController, MainViewControllerProtocol {
 			table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			table.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		])
+	}
+
+	@objc private func submitButtonTapped() {
+		viewModel.submitButtonTapped()
 	}
 }
