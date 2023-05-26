@@ -8,11 +8,20 @@
 import Foundation
 
 /// Struct for answer received from user
-struct Answer: Codable {
+final class Answer: Codable {
 
 	/// question UUID
 	let questionUUID: UUID
 
 	/// answer text
 	var answer: String
+
+	/// Initializer
+	/// - Parameters:
+	///   - questionUUID: uuid
+	///   - answer: answer text
+	init(questionUUID: UUID, answer: String) {
+		self.questionUUID = questionUUID
+		self.answer = answer
+	}
 }

@@ -36,16 +36,26 @@ final class MainViewModel: MainViewModelProtocol {
 	// MARK: - MainViewModelProtocol
 
 	func viewDidLoad() {
-		dataProvider.fetchQuestions() { [weak self] questions, error in
-			guard error == nil else {
-				self?.handleFetchingError(error)
-				return
+		dataProvider.fetchQuestions() { [weak self] result in
+			switch result {
+			case .success(let questions):
+				self?.handleFetchedQuestions(questions)
+			case .failure:
+				self?.handleError(withText: "Could not load questions")
 			}
-			self?.handleFetchedQuestions(questions)
 		}
 	}
 
-	func submitButtonTapped() {}
+	func submitButtonTapped() {
+		dataProvider.saveAnswers(answers) { [weak self] result in
+			switch result {
+			case .success:
+				self?.handleSavingAnswersSuccess()
+			case .failure:
+				self?.handleError(withText: "Could not load questions")
+			}
+		}
+	}
 
 	// MARK: - Private
 
@@ -57,7 +67,11 @@ final class MainViewModel: MainViewModelProtocol {
 		viewController?.setUIData(items)
 	}
 
-	private func handleFetchingError(_ error: Error?) {}
+	private func handleSavingAnswersSuccess() {
+	}
+
+	private func handleError(withText text: String) {
+	}
 
 	private func makeCellFor(_ question: Question) -> RKTableViewCellProtocol {
 		switch question.questionType {
@@ -78,7 +92,7 @@ final class MainViewModel: MainViewModelProtocol {
 extension MainViewModel: QuestionCellOutput {
 
 	func answerFor(questionUUID: UUID, answer: String) {
-		if var existedAnswer = answers.first(where: { $0.questionUUID == questionUUID } ) {
+		if let existedAnswer = answers.first(where: { $0.questionUUID == questionUUID } ) {
 			existedAnswer.answer = answer
 		} else {
 			answers.append(Answer(questionUUID: questionUUID, answer: answer))
