@@ -46,8 +46,8 @@ final class Question: Codable {
 	///   - type: type
 	///   - question: question text
 	///   - isRequired: flag, if question is required
-	init(type: QuestionType, question: String, isRequired: Bool) {
-		uuid = UUID()
+	init(type: QuestionType, question: String, isRequired: Bool, uuid: UUID? = nil) {
+		self.uuid = uuid ?? UUID()
 		self.isRequired = isRequired
 		questionType = type
 		questionText = question

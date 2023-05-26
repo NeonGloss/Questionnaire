@@ -12,7 +12,7 @@ final class MainScreenAssembler {
 
 	/// Creates scene
 	static func create() -> UIViewController {
-		let viewModel = MainViewModel(dataProvider: QuestionnaireDataProvider())
+		let viewModel = MainViewModel(dataProvider: QuestionnaireDataProvider(networkService: NetworkService()))
 		let viewController = MainViewController(viewModel: viewModel)
 		viewModel.viewController = viewController
 		return viewController

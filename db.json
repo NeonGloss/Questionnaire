@@ -1,0 +1,74 @@
+{
+  "answers": [
+
+  ],
+  "questions": [
+    {
+      "questionType": {
+        "multipleChoice": {
+          "_0": [
+            {
+              "plain": {
+                "_0": "Kotlin"
+              }
+            },
+            {
+              "plain": {
+                "_0": "Java"
+              }
+            },
+            {
+              "plain": {
+                "_0": "C++"
+              }
+            }
+          ]
+        }
+      },
+      "uuid": "9549532C-7A17-4D03-8E41-E9E190271E4C",
+      "isRequired": false,
+      "questionText": "What language is your favorite?"
+    },
+    {
+      "questionType": {
+        "textFilling": {
+          "placeHolder": "Your answer"
+        }
+      },
+      "uuid": "FB729EB8-D22E-4F2C-B173-CC77106F513B",
+      "isRequired": false,
+      "questionText": "What do you like about programming? added many words to see if everything is ok"
+    },
+    {
+      "questionType": {
+        "multipleChoice": {
+          "_0": [
+            {
+              "plain": {
+                "_0": "Easy"
+              }
+            },
+            {
+              "plain": {
+                "_0": "Normal"
+              }
+            },
+            {
+              "plain": {
+                "_0": "Hard"
+              }
+            },
+            {
+              "textFilling": {
+                "text": "Other"
+              }
+            }
+          ]
+        }
+      },
+      "uuid": "9F89BFB8-43D4-4AA3-BAD6-DE2FC40061C3",
+      "isRequired": true,
+      "questionText": "How was the assignment?"
+    }
+  ]
+}

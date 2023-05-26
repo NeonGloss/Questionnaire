@@ -12,31 +12,69 @@ protocol QuestionnaireDataProviderProtocol {
 
 	/// Fetch questions
 	/// - Parameter completion: completion that returns fetched questions array or/and error received while fetching
-	func fetchQuestions(completion: @escaping ([Question], Error?) -> Void)
+	func fetchQuestions(completion: @escaping (Result<[Question], Error>) -> Void)
+
+	/// Save answers
+	/// - Parameter answers: answers
+	/// - Parameter completion: completion with the result
+	func saveAnswers(_ answers: [Answer], completion: @escaping (Result<Bool, Error>) -> Void)
 }
 
 /// Questionnaire data provider
 final class QuestionnaireDataProvider: QuestionnaireDataProviderProtocol {
-    
-    func fetchQuestions(completion: @escaping ([Question], Error?) -> Void) {
-		let questions = [Question(type: QuestionType.multipleChoice([.plain("Kotlin"),
-																	 .plain("Java"),
-																	 .plain("C++")]),
-								  question: "What language is your favorite?",
-								  isRequired: false),
-						 Question(type: .textFilling(placeHolder: "Your answer"),
-								  question: "What do you like about programming? added many words to see if everything is ok", isRequired: false),
-						 Question(type: .multipleChoice([.plain("Easy"),
-														 .plain("Normal"),
-														 .plain("Hard"),
-														 .textFilling(text: "Other", placeHolder: nil)]),
-								  question: "How was the assignment?",
-								  isRequired: true)]
-		let encodeer = JSONEncoder()
-		encodeer.outputFormatting = .prettyPrinted
-		let encodedData = try? encodeer.encode(questions)
-		print(String(data: encodedData!, encoding: .utf8)!)
 
-		completion(questions, nil)
-    }
+	private let networkService: NetworkServiceProtocol
+
+	/// Initializer
+	/// - Parameter networkService: network service
+	init(networkService: NetworkServiceProtocol) {
+		self.networkService = networkService
+	}
+
+	func fetchQuestions(completion: @escaping (Result<[Question], Error>) -> Void) {
+		guard let url = Constants.urlForQuestions else {
+			completion(.failure(CustomError.customError("Could not reach a server")))
+			return
+		}
+		networkService.fetchData(by: url) { [weak self] result in
+			self?.handleFetchedResults(result, completion: completion)
+		}
+	}
+
+	func saveAnswers(_ answers: [Answer], completion: @escaping (Result<Bool, Error>) -> Void) {
+		guard let url = Constants.urlForAnswers else {
+			completion(.failure(CustomError.customError("Could not reach a server")))
+			return
+		}
+
+		let encodeer = JSONEncoder()
+		guard let encodedData = try? encodeer.encode(answers) else {
+			completion(.failure(CustomError.customError("Failed to save the answers")))
+			return
+		}
+
+		print("📀📀📀 JSON to save:\n")
+		print(String(data: encodedData, encoding: .utf8) ?? String())
+
+		networkService.uploadData(by: url, data: encodedData) { result in
+			switch result {
+			case .success:
+				completion(.success(true))
+			case .failure(let error):
+				completion(.failure(error))
+			}
+		}
+	}
+
+	// MARK: - Private
+
+	func handleFetchedResults(_ result: Result<Data, Error>, completion: @escaping (Result<[Question], Error>) -> Void) {
+		switch result {
+		case .success(let data):
+			let fetchedQuestions = try? JSONDecoder().decode([Question].self, from: data)
+			completion(.success(fetchedQuestions ?? []))
+		case .failure(let error):
+			completion(.failure(error))
+		}
+	}
 }
