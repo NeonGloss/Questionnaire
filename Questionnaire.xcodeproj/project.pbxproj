@@ -27,6 +27,11 @@
 		30DF409D2A1F9CF800AF3A1C /* RKTableViewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40932A1F9CF800AF3A1C /* RKTableViewSettings.swift */; };
 		30DF409E2A1F9CF800AF3A1C /* UITableView+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40942A1F9CF800AF3A1C /* UITableView+extension.swift */; };
 		30DF409F2A1F9CF800AF3A1C /* RKTableViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40952A1F9CF800AF3A1C /* RKTableViewCellProtocol.swift */; };
+		30DF40AD2A1FBB4C00AF3A1C /* TextFillingQuestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40AC2A1FBB4C00AF3A1C /* TextFillingQuestionCell.swift */; };
+		30DF40AF2A1FBB5D00AF3A1C /* MultipleChoiceQuestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40AE2A1FBB5D00AF3A1C /* MultipleChoiceQuestionCell.swift */; };
+		30DF40B22A1FD6F700AF3A1C /* SemanticImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40B12A1FD6F700AF3A1C /* SemanticImages.swift */; };
+		30DF40B62A20BEA700AF3A1C /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40B52A20BEA700AF3A1C /* Answer.swift */; };
+		30DF40B82A20C51500AF3A1C /* SemanticStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40B72A20C51500AF3A1C /* SemanticStrings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +76,11 @@
 		30DF40932A1F9CF800AF3A1C /* RKTableViewSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RKTableViewSettings.swift; path = Questionnaire/RKTableViewSettings.swift; sourceTree = "<group>"; };
 		30DF40942A1F9CF800AF3A1C /* UITableView+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UITableView+extension.swift"; path = "Questionnaire/UITableView+extension.swift"; sourceTree = "<group>"; };
 		30DF40952A1F9CF800AF3A1C /* RKTableViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RKTableViewCellProtocol.swift; path = Questionnaire/RKTableViewCellProtocol.swift; sourceTree = "<group>"; };
+		30DF40AC2A1FBB4C00AF3A1C /* TextFillingQuestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFillingQuestionCell.swift; sourceTree = "<group>"; };
+		30DF40AE2A1FBB5D00AF3A1C /* MultipleChoiceQuestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleChoiceQuestionCell.swift; sourceTree = "<group>"; };
+		30DF40B12A1FD6F700AF3A1C /* SemanticImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemanticImages.swift; sourceTree = "<group>"; };
+		30DF40B52A20BEA700AF3A1C /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
+		30DF40B72A20C51500AF3A1C /* SemanticStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemanticStrings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +163,8 @@
 		30DF40712A1F861600AF3A1C /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				30DF40B12A1FD6F700AF3A1C /* SemanticImages.swift */,
+				30DF40B72A20C51500AF3A1C /* SemanticStrings.swift */,
 				30DF40802A1F93B000AF3A1C /* RKHelpers */,
 				30DF40722A1F862D00AF3A1C /* Main */,
 			);
@@ -162,6 +174,7 @@
 		30DF40722A1F862D00AF3A1C /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				30DF40B02A1FBB6500AF3A1C /* Cells */,
 				30DF40892A1F959000AF3A1C /* Model */,
 				30DF40732A1F864A00AF3A1C /* MainViewController.swift */,
 				30DF40742A1F864A00AF3A1C /* MainViewModel.swift */,
@@ -184,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				30DF408A2A1F95B300AF3A1C /* Question.swift */,
+				30DF40B52A20BEA700AF3A1C /* Answer.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -212,6 +226,15 @@
 			isa = PBXGroup;
 			children = (
 				30DF408E2A1F9CF800AF3A1C /* PlainCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		30DF40B02A1FBB6500AF3A1C /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				30DF40AC2A1FBB4C00AF3A1C /* TextFillingQuestionCell.swift */,
+				30DF40AE2A1FBB5D00AF3A1C /* MultipleChoiceQuestionCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -349,13 +372,18 @@
 				30DF40432A1F85FE00AF3A1C /* ViewController.swift in Sources */,
 				30DF407E2A1F8EAB00AF3A1C /* MainScreenAssembler.swift in Sources */,
 				30DF409C2A1F9CF800AF3A1C /* RKTableView.swift in Sources */,
+				30DF40AF2A1FBB5D00AF3A1C /* MultipleChoiceQuestionCell.swift in Sources */,
 				30DF408B2A1F95B300AF3A1C /* Question.swift in Sources */,
 				30DF40492A1F85FE00AF3A1C /* Questionnaire.xcdatamodeld in Sources */,
 				30DF409D2A1F9CF800AF3A1C /* RKTableViewSettings.swift in Sources */,
+				30DF40B62A20BEA700AF3A1C /* Answer.swift in Sources */,
+				30DF40B22A1FD6F700AF3A1C /* SemanticImages.swift in Sources */,
+				30DF40B82A20C51500AF3A1C /* SemanticStrings.swift in Sources */,
 				30DF403F2A1F85FE00AF3A1C /* AppDelegate.swift in Sources */,
 				30DF409E2A1F9CF800AF3A1C /* UITableView+extension.swift in Sources */,
 				30DF40772A1F864A00AF3A1C /* MainViewController.swift in Sources */,
 				30DF40412A1F85FE00AF3A1C /* SceneDelegate.swift in Sources */,
+				30DF40AD2A1FBB4C00AF3A1C /* TextFillingQuestionCell.swift in Sources */,
 				30DF40792A1F864A00AF3A1C /* QuestionnaireDataProvider.swift in Sources */,
 				30DF40972A1F9CF800AF3A1C /* HasCellIdProtocol.swift in Sources */,
 				30DF409F2A1F9CF800AF3A1C /* RKTableViewCellProtocol.swift in Sources */,
