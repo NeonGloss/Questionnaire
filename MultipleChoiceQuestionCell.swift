@@ -14,6 +14,10 @@ final class MultipleChoiceQuestionCell: UITableViewCell, RKTableViewCellProtocol
 
 	private let output: QuestionCellOutput?
 	private let questionUUID: UUID
+	private var variantsElements: [(UIButton, UITextField?)] = []
+	private enum Sizes {
+		static let underlineHeight: CGFloat = 1
+	}
 
 	private let questionLabel: UILabel = {
 		let label = UILabel()
@@ -28,37 +32,12 @@ final class MultipleChoiceQuestionCell: UITableViewCell, RKTableViewCellProtocol
 		return view
 	}()
 
-	private var buttons: [UIButton] = []
-
-	private var textFieldUnderline: UIView = {
-		let view = UIView()
-		view.backgroundColor = .blue
-		return view
+	private lazy var choicesStack: UIStackView = {
+		let stackView = UIStackView()
+		stackView.axis = .vertical
+		stackView.distribution = .fill
+		return stackView
 	}()
-
-	private var textField: UITextField = {
-		let textField = UITextField()
-		textField.autocapitalizationType = .none
-		textField.autocorrectionType = .no
-		return textField
-	}()
-
-	private enum Sizes {
-		static let verticalIndent: CGFloat = 10
-		static let underlineHeight: CGFloat = 1
-		static let contentToBottom: CGFloat = 30
-		static let textFieldHeight: CGFloat = 20
-		static let horizontalIndent: CGFloat = 15
-		static let textFieldToUnderline: CGFloat = 5
-		static let verticalUnderViewInden: CGFloat = 10
-		static let underViewHorizontalIndent: CGFloat = 20
-
-		static let firstButtonToBottom: CGFloat = 15
-		static let buttonHeight: CGFloat = 40
-		static let indentBetweenButtons: CGFloat = 15
-		static let contentToSubcontentMultiplier: CGFloat = 0.8
-		static let underlineToButton: CGFloat = 5
-	}
 
 	/// Initializer
 	/// - Parameters:
@@ -66,7 +45,7 @@ final class MultipleChoiceQuestionCell: UITableViewCell, RKTableViewCellProtocol
 	///   - text: question text
 	///   - choices: variants for user choosing
 	///   - output: object for reacting on user interactions
-	init(questionUUID: UUID, text: String, choices: [MultipleChoiceElement], output: QuestionCellOutput?) {
+	init(questionUUID: UUID, text: NSAttributedString, choices: [MultipleChoiceElement], output: QuestionCellOutput?) {
 		self.output = output
 		self.questionUUID = questionUUID
 		super.init(style: .subtitle, reuseIdentifier: nil)
@@ -80,94 +59,108 @@ final class MultipleChoiceQuestionCell: UITableViewCell, RKTableViewCellProtocol
 
 	// MARK: - Private
 
-	private func setupUI(text: String, choices: [MultipleChoiceElement]) {
+	private func setupUI(text: NSAttributedString, choices: [MultipleChoiceElement]) {
 		selectionStyle = .none
-		textField.delegate = self
 		backgroundColor = .clear
+		questionLabel.attributedText = text
+		makeChoicesUIElements(for: choices).forEach { choicesStack.addArrangedSubview($0) }
+	}
 
-		questionLabel.text = text
-
+	private func makeChoicesUIElements(for choices: [MultipleChoiceElement]) -> [UIStackView] {
+		var choicesStackView: [UIStackView] = []
 		choices.forEach { element in
-			let resultText: String
+			let button: UIButton = {
+				var configuration = UIButton.Configuration.filled()
+				configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)
+				configuration.image = SemanticImages.bulletPointPassive
+				configuration.baseForegroundColor = .black
+				configuration.baseBackgroundColor = .clear
+				configuration.imagePadding = 10
+
+				let button = UIButton()
+				button.configuration = configuration
+				button.contentHorizontalAlignment = .leading
+				button.addTarget(self, action: #selector(buttonDidTapped(_:)), for: .touchUpInside)
+				return button
+			}()
+
+			let textField = UITextField()
+			textField.delegate = self
+			textField.isUserInteractionEnabled = false
+
+			let textFieldUnderlineView = UIView()
+			textFieldUnderlineView.backgroundColor = Constants.Design.Colors.background
+			textFieldUnderlineView.heightAnchor.constraint(equalToConstant: Sizes.underlineHeight).isActive = true
+
+			let choiceStackView = UIStackView()
+			choiceStackView.distribution = .fill
+			choiceStackView.axis = .horizontal
+			choiceStackView.spacing = 20
+
 			switch element {
 			case .plain(let text):
-				resultText = text
-			case .textFilling(let text, _):
-				resultText = text
+				button.setTitle(text, for: .normal)
+				choiceStackView.addArrangedSubview(button)
+				variantsElements.append((button, nil))
+			case .textFilling(let text, let placeholder):
+				textField.placeholder = placeholder
+				button.setTitle(text, for: .normal)
+				button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+				choiceStackView.addArrangedSubview(button)
+
+				let verticalStack = UIStackView(arrangedSubviews: [textField, textFieldUnderlineView])
+				verticalStack.distribution = .fill
+				verticalStack.axis = .vertical
+
+				choiceStackView.addArrangedSubview(verticalStack)
+				variantsElements.append((button, textField))
 			}
-			let button = UIButton()
-			button.backgroundColor = .white
-			button.layer.borderColor = UIColor.black.cgColor
-			button.setImage(SemanticImages.bulletPointPassive, for: .normal)
-
-			button.setTitle(resultText, for: .normal)
-			button.setTitleColor(.black, for: .normal)
-			button.layer.borderWidth = 1
-			button.layer.cornerRadius = 18
-			button.addTarget(self, action: #selector(buttonDidTapped(_:)), for: .touchUpInside)
-			buttons.append(button)
+			choicesStackView.append(choiceStackView)
 		}
-
+		return choicesStackView
 	}
 
 	@objc private func buttonDidTapped(_ button: UIButton) {
-		answerReceived(button.titleLabel?.text)
+		variantsElements.forEach { variantElement in
+			if variantElement.0 === button,
+			   variantElement.1 != nil {
+				variantElement.0.setImage(SemanticImages.bulletPointActive, for: .normal)
+				variantElement.1?.isUserInteractionEnabled = true
+				answerReceived(nil)
+			} else if variantElement.0 === button {
+				variantElement.0.setImage(SemanticImages.bulletPointActive, for: .normal)
+				answerReceived(button.titleLabel?.text)
+			} else {
+				variantElement.0.setImage(SemanticImages.bulletPointPassive, for: .normal)
+				variantElement.1?.isUserInteractionEnabled = false
+				variantElement.1?.text = nil
+			}
+		}
 	}
 
 	private func answerReceived(_ answer: String?) {
-		guard let answer = answer,
-			  !answer.isEmpty else { return }
-		
 		output?.answerFor(questionUUID: questionUUID, answer: answer)
 	}
 
 	private func setupConstraints() {
-		contentView.addSubview(underView)
-		contentView.addSubview(questionLabel)
-		contentView.addSubview(textField)
-		contentView.addSubview(textFieldUnderline)
-		buttons.forEach {
-			contentView.addSubview($0)
-		}
-
+		[underView, questionLabel, choicesStack].forEach { contentView.addSubview($0) }
 		contentView.subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
 
 		NSLayoutConstraint.activate([
-			underView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Sizes.verticalUnderViewInden),
-			underView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Sizes.verticalUnderViewInden),
-			underView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Sizes.underViewHorizontalIndent),
-			underView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Sizes.underViewHorizontalIndent),
+			underView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.Design.Sizes.cellsVerticalIndent),
+			underView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.Design.Sizes.cellsVerticalIndent),
+			underView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.Design.Sizes.cellsHorizontalIndent),
+			underView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.Design.Sizes.cellsHorizontalIndent),
 
-			questionLabel.topAnchor.constraint(equalTo: underView.topAnchor, constant: Sizes.verticalIndent),
-			questionLabel.leadingAnchor.constraint(equalTo: underView.leadingAnchor, constant: Sizes.horizontalIndent),
-			questionLabel.trailingAnchor.constraint(equalTo: underView.trailingAnchor, constant: -Sizes.horizontalIndent),
+			questionLabel.topAnchor.constraint(equalTo: underView.topAnchor, constant: Constants.Design.Sizes.verticalBigIndent),
+			questionLabel.leadingAnchor.constraint(equalTo: underView.leadingAnchor, constant: Constants.Design.Sizes.cellsContentHorizontalIndent),
+			questionLabel.trailingAnchor.constraint(equalTo: underView.trailingAnchor, constant: -Constants.Design.Sizes.cellsContentHorizontalIndent),
 
-			textField.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: Sizes.verticalIndent),
-			textField.leadingAnchor.constraint(equalTo: questionLabel.leadingAnchor),
-			textField.trailingAnchor.constraint(equalTo: questionLabel.trailingAnchor),
-			textField.heightAnchor.constraint(equalToConstant: Sizes.textFieldHeight),
-
-			textFieldUnderline.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: Sizes.textFieldToUnderline),
-			textFieldUnderline.leadingAnchor.constraint(equalTo: questionLabel.leadingAnchor),
-			textFieldUnderline.trailingAnchor.constraint(equalTo: questionLabel.trailingAnchor),
-			textFieldUnderline.heightAnchor.constraint(equalToConstant: Sizes.underlineHeight),
+			choicesStack.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: Constants.Design.Sizes.verticalBigIndent),
+			choicesStack.leadingAnchor.constraint(equalTo: underView.leadingAnchor, constant: Constants.Design.Sizes.cellsContentHorizontalIndent),
+			choicesStack.trailingAnchor.constraint(equalTo: underView.trailingAnchor,  constant: -Constants.Design.Sizes.cellsContentHorizontalIndent),
+			choicesStack.bottomAnchor.constraint(equalTo: underView.bottomAnchor, constant: -Constants.Design.Sizes.verticalBigIndent),
 		])
-
-		buttons.enumerated().forEach { index, button in
-			let indentFromBottom =
-				Sizes.contentToBottom + ((Sizes.buttonHeight + Sizes.indentBetweenButtons) * CGFloat(index))
-			NSLayoutConstraint.activate([
-				button.leadingAnchor.constraint(equalTo: questionLabel.leadingAnchor),
-				button.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -indentFromBottom),
-				button.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: Sizes.contentToSubcontentMultiplier),
-				button.heightAnchor.constraint(equalToConstant: Sizes.buttonHeight)
-			])
-			if index == buttons.count - 1 {
-				NSLayoutConstraint.activate([
-					button.topAnchor.constraint(equalTo: textFieldUnderline.bottomAnchor, constant: Sizes.underlineToButton)
-				])
-			}
-		}
 	}
 
 	// MARK: - RKTableViewCellProtocol
@@ -197,6 +190,11 @@ extension MultipleChoiceQuestionCell: UITextFieldDelegate {
 	// MARK: Private
 
 	private func textChanged(in textField: UITextField) {
-		answerReceived(textField.text)
+		var resultAnswer: String? = nil
+		if let text = textField.text {
+			let variantElements = variantsElements.first{ $0.1 === textField }
+			resultAnswer = variantElements?.0.currentTitle?.appending(text)
+		}
+		answerReceived(resultAnswer)
 	}
 }

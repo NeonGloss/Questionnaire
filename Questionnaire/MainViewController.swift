@@ -13,6 +13,10 @@ protocol MainViewControllerProtocol {
 	/// Set UI data model
 	/// - Parameter items: items
 	func setUIData(_ items: [RKTableViewCellProtocol])
+
+	/// Display an alert with text
+	/// - Parameter text: text
+	func displayAlertWith(text: String)
 }
 
 /// Main view controller
@@ -35,12 +39,9 @@ final class MainViewController: UIViewController, MainViewControllerProtocol {
 	}()
 
 	private enum Sizes {
-		static let topToTableIndent: CGFloat = 30
+		static let topToTableIndent: CGFloat = 0
 		static let submitButtonWidth: CGFloat = 100
-		static let submitButtonToLeft: CGFloat = 20
 		static let submitButtonHeight: CGFloat = 30
-		static let tableToSubmitButton: CGFloat = 20
-		static let submitButtonToBottom: CGFloat = 40
 	}
 
 	/// Initializer
@@ -68,6 +69,12 @@ final class MainViewController: UIViewController, MainViewControllerProtocol {
 		table.reloadData()
 	}
 
+	func displayAlertWith(text: String) {
+		let alert = UIAlertController(title: text, message: nil, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "OK", style: .default))
+		self.present(alert, animated: true, completion: nil)
+	}
+
 	// MARK: - Private
 
 	private func setupUI() {
@@ -83,13 +90,13 @@ final class MainViewController: UIViewController, MainViewControllerProtocol {
 		NSLayoutConstraint.activate([
 			table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			table.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-			table.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizes.topToTableIndent),
-			table.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -Sizes.tableToSubmitButton),
+			table.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Sizes.topToTableIndent),
+			table.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -Constants.Design.Sizes.verticalSmallIndent),
 
 			submitButton.widthAnchor.constraint(equalToConstant: Sizes.submitButtonWidth),
 			submitButton.heightAnchor.constraint(equalToConstant: Sizes.submitButtonHeight),
-			submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.submitButtonToLeft),
-			submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Sizes.submitButtonToBottom),
+			submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.Design.Sizes.verticalBigIndent),
+			submitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.Design.Sizes.verticalSmallIndent),
 		])
 	}
 

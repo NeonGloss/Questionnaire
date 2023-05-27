@@ -25,7 +25,8 @@ final class MainViewModel: MainViewModelProtocol {
 
 	private var dataProvider: QuestionnaireDataProviderProtocol
 
-	private var answers: [Answer] = []
+	private var questions: [Question] = []
+	private var answers: [UUID: String] = [:]
 
 	/// Initializer
 	/// - Parameter dataProvider: data provider
@@ -41,18 +42,25 @@ final class MainViewModel: MainViewModelProtocol {
 			case .success(let questions):
 				self?.handleFetchedQuestions(questions)
 			case .failure:
-				self?.handleError(withText: "Could not load questions")
+				self?.handleError(withText: SemanticStrings.Errors.questionsUnreacheble)
+				self?.handleFetchedQuestions(Constants.questions)
 			}
 		}
 	}
 
 	func submitButtonTapped() {
+		let requiredQuestionsUUIDs = Set(questions.compactMap { $0.isRequired ? $0.uuid : nil } )
+		guard requiredQuestionsUUIDs.subtracting(answers.keys).isEmpty else {
+			handleError(withText: SemanticStrings.Errors.answerRequiredQuestions)
+			return
+		}
+
 		dataProvider.saveAnswers(answers) { [weak self] result in
 			switch result {
 			case .success:
 				self?.handleSavingAnswersSuccess()
 			case .failure:
-				self?.handleError(withText: "Could not load questions")
+				self?.handleError(withText: SemanticStrings.Errors.answersUnsaved)
 			}
 		}
 	}
@@ -60,18 +68,23 @@ final class MainViewModel: MainViewModelProtocol {
 	// MARK: - Private
 
 	private func handleFetchedQuestions(_ questions: [Question]) {
+		self.questions = questions
 		viewController?.setUIData(makeItemsFor(questions))
 	}
 
 	private func handleSavingAnswersSuccess() {
+		viewController?.displayAlertWith(text: SemanticStrings.submittedSuccessfully)
 	}
 
 	private func handleError(withText text: String) {
+		viewController?.displayAlertWith(text: text)
 	}
 
 	private func makeItemsFor(_ questions: [Question]) -> [RKTableViewCellProtocol] {
 		var items: [RKTableViewCellProtocol] = []
-		items.append(HeaderCell(headerText: "GoTech\nQuestionnaire", subText: "Show me what you got!", cautionText: "* Required"))
+		items.append(HeaderCell(headerText: "GoTech\nQuestionnaire",
+								subText: "Show me what you got!",
+								cautionText: "* Required"))
 		questions.forEach {
 			items.append(makeCellFor($0))
 		}
@@ -79,28 +92,39 @@ final class MainViewModel: MainViewModelProtocol {
 	}
 
 	private func makeCellFor(_ question: Question) -> RKTableViewCellProtocol {
+		let questionString = !question.isRequired ? NSAttributedString(string:question.questionText) :
+													makeQuestionStringWithRedStar(question.questionText)
+
 		switch question.questionType {
+
 		case .multipleChoice(let multipleChoiceData):
 			return MultipleChoiceQuestionCell(questionUUID: question.uuid,
-											  text: question.questionText,
+											  text: questionString,
 											  choices: multipleChoiceData,
 											  output: self)
 		case .textFilling(let placeholder):
 			return TextFillingQuestionCell(questionUUID: question.uuid,
-										   text: question.questionText,
+										   text: questionString,
 										   placeholder: placeholder,
 										   output: self)
 		}
+	}
+
+	private func makeQuestionStringWithRedStar(_ text: String) -> NSAttributedString {
+		let resultText = text + " *"
+		let range = (resultText as NSString).range(of: " *")
+
+		let attributedString = NSMutableAttributedString(string:resultText)
+		attributedString.addAttribute(NSAttributedString.Key.foregroundColor,
+									  value: Constants.Design.Colors.alert,
+									  range: range)
+		return attributedString
 	}
 }
 
 extension MainViewModel: QuestionCellOutput {
 
-	func answerFor(questionUUID: UUID, answer: String) {
-		if let existedAnswer = answers.first(where: { $0.questionUUID == questionUUID } ) {
-			existedAnswer.answer = answer
-		} else {
-			answers.append(Answer(questionUUID: questionUUID, answer: answer))
-		}
+	func answerFor(questionUUID: UUID, answer: String?) {
+		answers[questionUUID] = answer
 	}
 }

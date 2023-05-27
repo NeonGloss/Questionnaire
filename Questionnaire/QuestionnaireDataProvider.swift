@@ -17,7 +17,7 @@ protocol QuestionnaireDataProviderProtocol {
 	/// Save answers
 	/// - Parameter answers: answers
 	/// - Parameter completion: completion with the result
-	func saveAnswers(_ answers: [Answer], completion: @escaping (Result<Bool, Error>) -> Void)
+	func saveAnswers(_ answers: [UUID: String], completion: @escaping (Result<Bool, Error>) -> Void)
 }
 
 /// Questionnaire data provider
@@ -33,7 +33,7 @@ final class QuestionnaireDataProvider: QuestionnaireDataProviderProtocol {
 
 	func fetchQuestions(completion: @escaping (Result<[Question], Error>) -> Void) {
 		guard let url = Constants.urlForQuestions else {
-			completion(.failure(CustomError.customError("Could not reach a server")))
+			completion(.failure(CustomError.customError(SemanticStrings.Errors.serverUnavailable)))
 			return
 		}
 		networkService.fetchData(by: url) { [weak self] result in
@@ -41,15 +41,15 @@ final class QuestionnaireDataProvider: QuestionnaireDataProviderProtocol {
 		}
 	}
 
-	func saveAnswers(_ answers: [Answer], completion: @escaping (Result<Bool, Error>) -> Void) {
+	func saveAnswers(_ answers: [UUID: String], completion: @escaping (Result<Bool, Error>) -> Void) {
 		guard let url = Constants.urlForAnswers else {
-			completion(.failure(CustomError.customError("Could not reach a server")))
+			completion(.failure(CustomError.customError(SemanticStrings.Errors.serverUnavailable)))
 			return
 		}
 
 		let encodeer = JSONEncoder()
 		guard let encodedData = try? encodeer.encode(answers) else {
-			completion(.failure(CustomError.customError("Failed to save the answers")))
+			completion(.failure(CustomError.customError(SemanticStrings.Errors.answersUnsaved)))
 			return
 		}
 

@@ -14,7 +14,7 @@ protocol QuestionCellOutput: AnyObject {
 	/// - Parameters:
 	///   - questionUUID: question UUID
 	///   - answer: answer string
-	func answerFor(questionUUID: UUID, answer: String)
+	func answerFor(questionUUID: UUID, answer: String?)
 }
 
 /// Cell for question where user has to put his oun answer
@@ -63,7 +63,7 @@ final class TextFillingQuestionCell: UITableViewCell, RKTableViewCellProtocol {
 	///   - text: question text
 	///   - placeholder: placeholer
 	///   - output: object for reacting on user interactions
-	init(questionUUID: UUID, text: String, placeholder: String?, output: QuestionCellOutput?) {
+	init(questionUUID: UUID, text: NSAttributedString, placeholder: String?, output: QuestionCellOutput?) {
 		self.output = output
 		self.questionUUID = questionUUID
 		super.init(style: .subtitle, reuseIdentifier: nil)
@@ -77,12 +77,12 @@ final class TextFillingQuestionCell: UITableViewCell, RKTableViewCellProtocol {
 
 	// MARK: - Private
 
-	private func setupUI(text: String, placeholder: String?) {
+	private func setupUI(text: NSAttributedString, placeholder: String?) {
 		selectionStyle = .none
 		textField.delegate = self
 		backgroundColor = .clear
 
-		questionLabel.text = text
+		questionLabel.attributedText = text
 		if let placeholder = placeholder {
 			let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
 		 textField.attributedPlaceholder = NSAttributedString(string: placeholder,  attributes: attributes)
@@ -98,35 +98,25 @@ final class TextFillingQuestionCell: UITableViewCell, RKTableViewCellProtocol {
 		contentView.subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
 
 		NSLayoutConstraint.activate([
-			underView.topAnchor.constraint(equalTo: contentView.topAnchor,
-										   constant: Constants.Design.Sizes.cellsVerticalIndent),
-			underView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
-											  constant: -Constants.Design.Sizes.cellsVerticalIndent),
-			underView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
-											   constant: Constants.Design.Sizes.cellsHorizontalIndent),
-			underView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
-												constant: -Constants.Design.Sizes.cellsHorizontalIndent),
+			underView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.Design.Sizes.cellsVerticalIndent),
+			underView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.Design.Sizes.cellsVerticalIndent),
+			underView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.Design.Sizes.cellsHorizontalIndent),
+			underView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.Design.Sizes.cellsHorizontalIndent),
 
-			questionLabel.topAnchor.constraint(equalTo: underView.topAnchor,
-											   constant: Constants.Design.Sizes.verticalBigIndent),
-			questionLabel.leadingAnchor.constraint(equalTo: underView.leadingAnchor,
-												   constant: Constants.Design.Sizes.cellsContentHorizontalIndent),
-			questionLabel.trailingAnchor.constraint(equalTo: underView.trailingAnchor,
-													constant: -Constants.Design.Sizes.cellsContentHorizontalIndent),
+			questionLabel.topAnchor.constraint(equalTo: underView.topAnchor, constant: Constants.Design.Sizes.verticalBigIndent),
+			questionLabel.leadingAnchor.constraint(equalTo: underView.leadingAnchor, constant: Constants.Design.Sizes.cellsContentHorizontalIndent),
+			questionLabel.trailingAnchor.constraint(equalTo: underView.trailingAnchor, constant: -Constants.Design.Sizes.cellsContentHorizontalIndent),
 			
-			textField.topAnchor.constraint(equalTo: questionLabel.bottomAnchor,
-										   constant: Constants.Design.Sizes.verticalBigIndent),
+			textField.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: Constants.Design.Sizes.verticalBigIndent),
+			textField.heightAnchor.constraint(equalToConstant: Sizes.textFieldHeight),
 			textField.leadingAnchor.constraint(equalTo: questionLabel.leadingAnchor),
 			textField.trailingAnchor.constraint(equalTo: questionLabel.trailingAnchor),
-			textField.heightAnchor.constraint(equalToConstant: Sizes.textFieldHeight),
 			
-			textFillingUnderlineView.topAnchor.constraint(equalTo: textField.bottomAnchor,
-														  constant: Sizes.textFieldToUnderline),
+			textFillingUnderlineView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: Sizes.textFieldToUnderline),
+			textFillingUnderlineView.bottomAnchor.constraint(equalTo: underView.bottomAnchor, constant: -Constants.Design.Sizes.verticalBigIndent * 1.5),
 			textFillingUnderlineView.leadingAnchor.constraint(equalTo: questionLabel.leadingAnchor),
 			textFillingUnderlineView.trailingAnchor.constraint(equalTo: questionLabel.trailingAnchor),
 			textFillingUnderlineView.heightAnchor.constraint(equalToConstant: Sizes.underlineHeight),
-			textFillingUnderlineView.bottomAnchor.constraint(equalTo: underView.bottomAnchor,
-															 constant: -Constants.Design.Sizes.verticalBigIndent * 1.5),
 		])
 	}
 
@@ -157,9 +147,6 @@ extension TextFillingQuestionCell: UITextFieldDelegate {
 	// MARK: Private
 
 	private func textChanged(in textField: UITextField) {
-		guard let answer = textField.text,
-			  !answer.isEmpty else { return }
-
-		output?.answerFor(questionUUID: questionUUID, answer: answer)
+		output?.answerFor(questionUUID: questionUUID, answer: textField.text)
 	}
 }

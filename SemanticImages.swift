@@ -11,12 +11,12 @@ import UIKit
 final class SemanticImages {
 
 	static var bulletPointActive: UIImage {
-		let config = UIImage.SymbolConfiguration(paletteColors: [.blue, .green])
+		let config = UIImage.SymbolConfiguration(paletteColors: [.black, .black])
 		return UIImage(systemName: "record.circle")?.applyingSymbolConfiguration(config) ?? UIImage()
 	}
 
 	static var bulletPointPassive: UIImage {
-		let config = UIImage.SymbolConfiguration(paletteColors: [.blue, .green])
+		let config = UIImage.SymbolConfiguration(paletteColors: [.black, .black])
 		return UIImage(systemName: "circle")?.applyingSymbolConfiguration(config) ?? UIImage()
 	}
 }

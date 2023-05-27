@@ -15,6 +15,7 @@ struct Constants {
 		enum Colors {
 			static let background: UIColor = UIColor(hex: "#EAE5F5")
 			static let nuance0: UIColor = UIColor(hex: "#48208C")
+			static let alert: UIColor = .red
 		}
 
 		enum Sizes {
@@ -42,7 +43,7 @@ struct Constants {
 		Question(type: .multipleChoice([.plain("Easy"),
 										.plain("Normal"),
 										.plain("Hard"),
-										.textFilling(text: "Other", placeHolder: nil)]),
+										.textFilling(text: "Other:", placeHolder: nil)]),
 				 question: "How was the assignment?",
 				 isRequired: true)
 	]
