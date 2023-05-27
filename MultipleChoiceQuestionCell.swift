@@ -24,9 +24,7 @@ final class MultipleChoiceQuestionCell: UITableViewCell, RKTableViewCellProtocol
 	private var underView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
-		view.layer.borderColor = UIColor.black.cgColor
-		view.layer.borderWidth = 1
-		view.layer.cornerRadius = 10
+		view.layer.cornerRadius = Constants.Design.Sizes.cellCornerRadius
 		return view
 	}()
 

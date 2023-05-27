@@ -22,12 +22,10 @@ final class MainViewController: UIViewController, MainViewControllerProtocol {
 
 	private lazy var submitButton: UIButton = {
 		let button = UIButton()
-		button.backgroundColor = .white
-		button.layer.borderColor = UIColor.black.cgColor
+		button.backgroundColor = Constants.Design.Colors.nuance0
 		button.setTitle(SemanticStrings.submit, for: .normal)
-		button.setTitleColor(.black, for: .normal)
-		button.layer.borderWidth = 1
-		button.layer.cornerRadius = 10
+		button.setTitleColor(.white, for: .normal)
+		button.layer.cornerRadius = 5
 		button.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
 		return button
 	}()
@@ -73,8 +71,8 @@ final class MainViewController: UIViewController, MainViewControllerProtocol {
 	// MARK: - Private
 
 	private func setupUI() {
-		view.backgroundColor = .systemMint
-		table.separatorStyle = .singleLine
+		view.backgroundColor = Constants.Design.Colors.background
+		table.separatorStyle = .none
 	}
 
 	private func setupConstraints() {

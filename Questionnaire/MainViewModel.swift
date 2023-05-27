@@ -60,17 +60,22 @@ final class MainViewModel: MainViewModelProtocol {
 	// MARK: - Private
 
 	private func handleFetchedQuestions(_ questions: [Question]) {
-		var items: [RKTableViewCellProtocol] = []
-		questions.forEach {
-			items.append(makeCellFor($0))
-		}
-		viewController?.setUIData(items)
+		viewController?.setUIData(makeItemsFor(questions))
 	}
 
 	private func handleSavingAnswersSuccess() {
 	}
 
 	private func handleError(withText text: String) {
+	}
+
+	private func makeItemsFor(_ questions: [Question]) -> [RKTableViewCellProtocol] {
+		var items: [RKTableViewCellProtocol] = []
+		items.append(HeaderCell(headerText: "GoTech\nQuestionnaire", subText: "Show me what you got!", cautionText: "* Required"))
+		questions.forEach {
+			items.append(makeCellFor($0))
+		}
+		return items
 	}
 
 	private func makeCellFor(_ question: Question) -> RKTableViewCellProtocol {
