@@ -10,6 +10,10 @@
 		30B6BB242A21149400FE1F0F /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B6BB232A21149400FE1F0F /* NetworkService.swift */; };
 		30B6BB262A21164400FE1F0F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B6BB252A21164400FE1F0F /* Constants.swift */; };
 		30B6BB282A2119D900FE1F0F /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B6BB272A2119D900FE1F0F /* CustomError.swift */; };
+		30B6BB2A2A221E6100FE1F0F /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B6BB292A221E6100FE1F0F /* HeaderCell.swift */; };
+		30B6BB322A22291700FE1F0F /* TopCornerRoundedUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B6BB312A22291700FE1F0F /* TopCornerRoundedUIView.swift */; };
+		30B6BB342A222F5700FE1F0F /* UIFont+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B6BB332A222F5700FE1F0F /* UIFont+extension.swift */; };
+		30B6BB362A2231E200FE1F0F /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B6BB352A2231E200FE1F0F /* UIColor+Extension.swift */; };
 		30DF403F2A1F85FE00AF3A1C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF403E2A1F85FE00AF3A1C /* AppDelegate.swift */; };
 		30DF40412A1F85FE00AF3A1C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40402A1F85FE00AF3A1C /* SceneDelegate.swift */; };
 		30DF40432A1F85FE00AF3A1C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DF40422A1F85FE00AF3A1C /* ViewController.swift */; };
@@ -58,6 +62,10 @@
 		30B6BB232A21149400FE1F0F /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		30B6BB252A21164400FE1F0F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		30B6BB272A2119D900FE1F0F /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
+		30B6BB292A221E6100FE1F0F /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
+		30B6BB312A22291700FE1F0F /* TopCornerRoundedUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopCornerRoundedUIView.swift; sourceTree = "<group>"; };
+		30B6BB332A222F5700FE1F0F /* UIFont+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+extension.swift"; sourceTree = "<group>"; };
+		30B6BB352A2231E200FE1F0F /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		30DF403B2A1F85FE00AF3A1C /* Questionnaire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Questionnaire.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30DF403E2A1F85FE00AF3A1C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		30DF40402A1F85FE00AF3A1C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -122,6 +130,14 @@
 				30B6BB272A2119D900FE1F0F /* CustomError.swift */,
 			);
 			name = Persistance;
+			sourceTree = "<group>";
+		};
+		30B6BB302A22290900FE1F0F /* UIElements */ = {
+			isa = PBXGroup;
+			children = (
+				30B6BB312A22291700FE1F0F /* TopCornerRoundedUIView.swift */,
+			);
+			name = UIElements;
 			sourceTree = "<group>";
 		};
 		30DF40322A1F85FE00AF3A1C = {
@@ -204,6 +220,7 @@
 		30DF40802A1F93B000AF3A1C /* RKHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				30B6BB302A22290900FE1F0F /* UIElements */,
 				30DF40A92A1F9F5100AF3A1C /* RKTable */,
 				30DF40A82A1F9F3F00AF3A1C /* Extensions */,
 			);
@@ -222,7 +239,9 @@
 		30DF40A82A1F9F3F00AF3A1C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				30B6BB332A222F5700FE1F0F /* UIFont+extension.swift */,
 				30DF40942A1F9CF800AF3A1C /* UITableView+extension.swift */,
+				30B6BB352A2231E200FE1F0F /* UIColor+Extension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -250,6 +269,7 @@
 		30DF40B02A1FBB6500AF3A1C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				30B6BB292A221E6100FE1F0F /* HeaderCell.swift */,
 				30DF40AC2A1FBB4C00AF3A1C /* TextFillingQuestionCell.swift */,
 				30DF40AE2A1FBB5D00AF3A1C /* MultipleChoiceQuestionCell.swift */,
 			);
@@ -389,7 +409,9 @@
 				30B6BB282A2119D900FE1F0F /* CustomError.swift in Sources */,
 				30DF40432A1F85FE00AF3A1C /* ViewController.swift in Sources */,
 				30DF407E2A1F8EAB00AF3A1C /* MainScreenAssembler.swift in Sources */,
+				30B6BB362A2231E200FE1F0F /* UIColor+Extension.swift in Sources */,
 				30B6BB242A21149400FE1F0F /* NetworkService.swift in Sources */,
+				30B6BB2A2A221E6100FE1F0F /* HeaderCell.swift in Sources */,
 				30DF409C2A1F9CF800AF3A1C /* RKTableView.swift in Sources */,
 				30DF40AF2A1FBB5D00AF3A1C /* MultipleChoiceQuestionCell.swift in Sources */,
 				30DF408B2A1F95B300AF3A1C /* Question.swift in Sources */,
@@ -401,6 +423,8 @@
 				30DF403F2A1F85FE00AF3A1C /* AppDelegate.swift in Sources */,
 				30DF409E2A1F9CF800AF3A1C /* UITableView+extension.swift in Sources */,
 				30DF40772A1F864A00AF3A1C /* MainViewController.swift in Sources */,
+				30B6BB342A222F5700FE1F0F /* UIFont+extension.swift in Sources */,
+				30B6BB322A22291700FE1F0F /* TopCornerRoundedUIView.swift in Sources */,
 				30DF40412A1F85FE00AF3A1C /* SceneDelegate.swift in Sources */,
 				30DF40AD2A1FBB4C00AF3A1C /* TextFillingQuestionCell.swift in Sources */,
 				30DF40792A1F864A00AF3A1C /* QuestionnaireDataProvider.swift in Sources */,

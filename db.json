@@ -26,7 +26,7 @@
         }
       },
       "uuid": "9549532C-7A17-4D03-8E41-E9E190271E4C",
-      "isRequired": false,
+      "isRequired": true,
       "questionText": "What language is your favorite?"
     },
     {
@@ -37,7 +37,7 @@
       },
       "uuid": "FB729EB8-D22E-4F2C-B173-CC77106F513B",
       "isRequired": false,
-      "questionText": "What do you like about programming? added many words to see if everything is ok"
+      "questionText": "What do you like about programming?"
     },
     {
       "questionType": {
@@ -60,7 +60,7 @@
             },
             {
               "textFilling": {
-                "text": "Other"
+                "text": "Other:"
               }
             }
           ]
