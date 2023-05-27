@@ -13,7 +13,7 @@ final class SemanticStrings {
 
 	enum Errors {
 		static let answerRequiredQuestions: String = "Not all required answers are answered"
-		static let questionsUnreacheble: String = "Could not load questions, adding default questions"
+		static let questionsUnreacheble: String = "Server is unreacheble\n(try to check it😉)\nAdding default questions"
 		static let answersUnsaved: String = "Could not save answers"
 		static let serverUnavailable: String = "Could not reach a server"
 	}
